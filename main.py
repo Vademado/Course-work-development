@@ -1,8 +1,8 @@
-from sources import reading_data
+from sources import read_data
 
 
 def main():
-    reading_data()
+    read_data()
 
 
 if __name__ == '__main__':
