@@ -1,4 +1,4 @@
-from sources import ComparisonOperators, Operations, visualize_cfg
+from sources import ComparisonOperators, Operations
 from random import randint
 
 
@@ -129,7 +129,3 @@ class CFG:
 
     def get_dictionary_base_blocks(self):
         return self.__dictionary_base_blocks
-
-
-cfg = CFG(7, 10, 50)
-visualize_cfg(cfg)

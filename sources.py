@@ -2,9 +2,11 @@ from random import randint
 from enum import Enum
 import graphviz
 
-INPUT_DATA = None
-NUMBER_OF_BASE_BLOCKS = None
-NUMBER_OF_EDGES = None
+
+class Constants:
+    INPUT_DATA = None
+    NUMBER_OF_BASE_BLOCKS = None
+    NUMBER_OF_EDGES = None
 
 
 class ComparisonOperators(Enum):
@@ -28,11 +30,10 @@ class Operations(Enum):
 
 
 def read_data():
-    global INPUT_DATA, NUMBER_OF_BASE_BLOCKS, NUMBER_OF_EDGES
     print("Введите количество вершин:", end=' ')
-    NUMBER_OF_BASE_BLOCKS = int(input())
-    NUMBER_OF_EDGES = randint(int(1.3 * NUMBER_OF_BASE_BLOCKS),
-                              2 * (NUMBER_OF_BASE_BLOCKS - 1))
+    Constants.NUMBER_OF_BASE_BLOCKS = int(input())
+    Constants.NUMBER_OF_EDGES = randint(int(1.3 * Constants.NUMBER_OF_BASE_BLOCKS),
+                                        2 * (Constants.NUMBER_OF_BASE_BLOCKS - 1))
 
 
 def operations_in_base_block_convert_to_string(base_block):
@@ -88,5 +89,5 @@ def visualize_cfg(cfg):
             condition_in_edge = condition_in_edge_convert_to_string(edge)
             dot.edge(str(edge.get_from_base_block_id()), str(edge.get_to_base_block_id()), condition_in_edge)
 
-    #dot.render('Control-flow graph.png', format='png')
-    #dot.render('Control-flow graph.pdf', view=True)
+    dot.render('Control-flow graph', format='png')
+    # dot.render('Control-flow graph.pdf', view=True)
