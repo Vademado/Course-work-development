@@ -32,12 +32,14 @@ class Operations(Enum):
 def read_data():
     print("Введите количество вершин:", end=' ')
     Constants.NUMBER_OF_BASE_BLOCKS = int(input())
+    print(int(1.3 * Constants.NUMBER_OF_BASE_BLOCKS), 2 * (Constants.NUMBER_OF_BASE_BLOCKS - 1))
     Constants.NUMBER_OF_EDGES = randint(int(1.3 * Constants.NUMBER_OF_BASE_BLOCKS),
                                         2 * (Constants.NUMBER_OF_BASE_BLOCKS - 1))
 
 
 def operations_in_base_block_convert_to_string(base_block):
-    string_operations_in_base_block = "\n"
+    string_operations_in_base_block = ""
+    if base_block.id == 0 : string_operations_in_base_block += "INITIAL BLOCK\n"
     for operation in base_block.get_operations():
         match operation[0]:
             case Operations.ADDITION:

@@ -8,7 +8,8 @@ class BaseBlock:
     id = 0
 
     def __init__(self, operations, input_data=None):
-        self.__id = BaseBlock.id + 1
+        self.id = BaseBlock.id
+        print(self.id)
         BaseBlock.id += 1
         self.__operations = operations
         self.__edges = []
@@ -84,7 +85,7 @@ class CFG:
             while True:
                 from_base_block = randint(0, self.__number_base_blocks - 1)
                 to_base_block = randint(0, self.__number_base_blocks - 1)
-                if len(self.__dictionary_base_blocks[from_base_block].get_edges()) < 2: break
+                if len(self.__dictionary_base_blocks[from_base_block].get_edges()) < 2 and  to_base_block: break
             if self.__dictionary_base_blocks[from_base_block].get_edges():
                 first_edge_condition = self.__dictionary_base_blocks[from_base_block].get_edges()[0].get_condition()
                 match first_edge_condition[0]:
