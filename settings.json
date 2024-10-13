@@ -1,0 +1,88 @@
+{
+  "comparison_operators": {
+    "equality": {
+      "lower_bound": -100,
+      "upper_bound": 100
+    },
+    "inequality": {
+      "lower_bound": -100,
+      "upper_bound": 100
+    },
+    "less_than": {
+      "lower_bound": -100,
+      "upper_bound": 100
+    },
+    "greater_than": {
+      "lower_bound": -100,
+      "upper_bound": 100
+    },
+    "less_than_or_equal": {
+      "lower_bound": -100,
+      "upper_bound": 100
+    },
+    "greater_than_or_equal": {
+      "lower_bound": -100,
+      "upper_bound": 100
+    },
+    "comparable_modulo": {
+      "lower_bound": 1,
+      "upper_bound": 100
+    },
+    "incomparably_modulo": {
+      "lower_bound": 1,
+      "upper_bound": 100
+    }
+  },
+  "operations": {
+    "addition": {
+      "lower_bound": 1,
+      "upper_bound": 100
+    },
+    "subtraction": {
+      "lower_bound": 1,
+      "upper_bound": 100
+    },
+    "multiplication": {
+      "lower_bound": 2,
+      "upper_bound": 10
+    },
+    "division": {
+      "lower_bound": 2,
+      "upper_bound": 10
+    },
+    "exponentiation": {
+      "lower_bound": 0,
+      "upper_bound": 10
+    },
+    "division_by_modulus": {
+      "lower_bound": 2,
+      "upper_bound": 100
+    },
+    "bit_shift_to_left": {
+      "lower_bound": 1,
+      "upper_bound": 10
+    },
+    "bit_shift_to_right": {
+      "lower_bound": 1,
+      "upper_bound": 10
+    },
+    "bitwise_or": {
+      "lower_bound": 1,
+      "upper_bound": 100
+    },
+    "bitwise_exclusive_or": {
+      "lower_bound": 1,
+      "upper_bound": 100
+    },
+    "bitwise_and": {
+      "lower_bound": 1,
+      "upper_bound": 100
+    }
+  },
+  "base_blocks": {
+    "number_operations": {
+      "lower_bound": 1,
+      "upper_bound": 12
+    }
+  }
+}

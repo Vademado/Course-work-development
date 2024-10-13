@@ -1,8 +1,6 @@
-from sources import ComparisonOperators, Operations
+from sources import ComparisonOperators, Operations, Constants
 from random import randint, choice
 
-
-# ОБРАБОТАТЬ СИТУЦИИ, КОГДА В ПРОЦЕССЕ ВЫПОЛНЕНИЯ БАЗОВОГО БЛОКА INPUT_DATA ОБРАЩАЕТСЯ В НОЛЬ
 
 class BaseBlock:
     id = 0
@@ -107,11 +105,17 @@ class CFG:
         self.__generate_cfg()
 
     def __generate_cfg(self):
+        base_blocks_settings = Constants.SETTINGS["base_blocks"]["number_operations"]
+        settings_comparison_operators = Constants.SETTINGS["comparison_operators"]
+        operation_settings = Constants.SETTINGS["operations"]
+
         for i in range(self.__number_base_blocks):
-            number_operations = randint(1, len(Operations))
-            # ОПРЕДЕЛИТЬ ЧИСЛЕННЫЕ ЗНАЧЕНИЕ ОПЕРАЦИИ (ПРЕДЕЛЫ)
-            operations = [(Operations(randint(0, len(Operations) - 1)), randint(0, 10)) for _ in
-                          range(number_operations)]
+            number_operations = randint(base_blocks_settings["lower_bound"], base_blocks_settings["upper_bound"])
+            operations = []
+            for j in range(number_operations):
+                index_operation = randint(0, len(Operations) - 1)
+                value_operand = None if Operations(index_operation) == Operations.BIT_INVERSION else randint(operation_settings[Operations(index_operation).name.lower()]["lower_bound"], operation_settings[Operations(index_operation).name.lower()]["upper_bound"])
+                operations.append((Operations(index_operation), value_operand))
             self.__dictionary_base_blocks[i] = BaseBlock(operations, None if i else self.__input_data)
 
         self.__base_blocks_related_with_initial_base_block = {0}
@@ -158,15 +162,13 @@ class CFG:
                         new_condition = (
                             ComparisonOperators.COMPARABLE_MODULO, first_edge_condition[1], first_edge_condition[2])
             else:
-                comparison_operator = ComparisonOperators(randint(0, 7))
+                comparison_operator = ComparisonOperators(randint(0, len(ComparisonOperators) - 1))
                 if comparison_operator == ComparisonOperators.COMPARABLE_MODULO or comparison_operator == ComparisonOperators.INCOMPARABLY_MODULO:
-                    # ОПРЕДЕЛИТЬ ЧИСЛЕННЫЕ ЗНАЧЕНИЕ ОПЕРАЦИИ (ПРЕДЕЛЫ)
-                    module = randint(1, 100)
+                    module = randint(settings_comparison_operators[comparison_operator.name.lower()]["lower_bound"], settings_comparison_operators[comparison_operator.name.lower()]["upper_bound"])
                     value_for_comparison = randint(0, module - 1)
                 else:
                     module = None
-                    # ОПРЕДЕЛИТЬ ЧИСЛЕННЫЕ ЗНАЧЕНИЕ ОПЕРАЦИИ (ПРЕДЕЛЫ)
-                    value_for_comparison = randint(-100, 100)
+                    value_for_comparison = randint(settings_comparison_operators[comparison_operator.name.lower()]["lower_bound"], settings_comparison_operators[comparison_operator.name.lower()]["upper_bound"])
                 new_condition = (comparison_operator, module, value_for_comparison)
             self.__dictionary_base_blocks[from_base_block].add_edge(Edge(from_base_block, to_base_block, new_condition))
 

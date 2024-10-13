@@ -1,3 +1,4 @@
+import json
 from random import randint
 from enum import Enum
 import graphviz
@@ -7,6 +8,7 @@ class Constants:
     INPUT_DATA = None
     NUMBER_OF_BASE_BLOCKS = None
     NUMBER_OF_EDGES = None
+    SETTINGS = None
 
 
 class ComparisonOperators(Enum):
@@ -42,10 +44,17 @@ def read_data():
                                         2 * (Constants.NUMBER_OF_BASE_BLOCKS - 1))
 
 
+def read_settings():
+    with open('settings.json', 'r', encoding='utf-8') as f:
+        Constants.SETTINGS = json.load(f)
+
+
 def operations_in_base_block_convert_to_string(base_block):
     string_operations_in_base_block = ""
-    if base_block.id == 0 : string_operations_in_base_block += "INITIAL BLOCK\n\n"
-    else: string_operations_in_base_block += f"{base_block.id}\n\n"
+    if base_block.id == 0:
+        string_operations_in_base_block += "INITIAL BLOCK\n\n"
+    else:
+        string_operations_in_base_block += f"{base_block.id}\n\n"
     for operation in base_block.get_operations():
         match operation[0]:
             case Operations.ADDITION:
@@ -109,5 +118,5 @@ def visualize_cfg(cfg):
             condition_in_edge = condition_in_edge_convert_to_string(edge)
             dot.edge(str(edge.get_from_base_block_id()), str(edge.get_to_base_block_id()), condition_in_edge)
 
-    #dot.render('Control-flow graph', format='png')
+    # dot.render('Control-flow graph', format='png')
     dot.render('Control-flow graph', view=True)
