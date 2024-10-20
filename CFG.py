@@ -1,4 +1,4 @@
-from sources import ComparisonOperators, Operations, Constants
+from utils import ComparisonOperators, Operations
 from random import randint, choice
 
 
@@ -8,22 +8,11 @@ class BaseBlock:
     def __init__(self, operations, input_data=None):
         self.id = BaseBlock.id
         BaseBlock.id += 1
-        self.__operations = operations
-        self.__edges = []
+        self.operations = operations
+        self.edges = []
 
-    # ОПРЕДЕЛИТЬ ПОВЕДЕНИЕ ПРИ operation[1] == 0
-    def __block_execution(self, input_data):
-        """Returns the data converted in the base block.
-
-                    :param input_data: arg1
-                    :type input_data: int
-
-                    :raises ValueError: if division by zero is performed
-
-                    :rtype: int
-                    :return: the result of processing the input data in the base block
-                    """
-        for operation in self.__operations:
+    def _block_execution(self, input_data):
+        for operation in self.operations:
             match operation[0]:
                 case Operations.ADDITION:
                     input_data += operation[1]
@@ -56,86 +45,59 @@ class BaseBlock:
                 case Operations.BIT_INVERSION:
                     input_data = ~input_data
 
-    def get_operations(self):
-        """Return sum of multiplication of all arguments.
-
-            :param a: arg1
-            :type a: int
-            :param b: arg2
-            :type b: int
-            :param c: arg3, defaults to 0
-            :type c: int, optional
-
-            :raises ValueError: if arg1 is equal to arg2
-
-            :rtype: int
-            :return: multiplication of all arguments
-            """
-        return self.__operations
-
-    def get_edges(self):
-        return self.__edges
-
     def add_edge(self, edge):
-        self.__edges.append(edge)
+        self.edges.append(edge)
 
 
 class Edge:
     def __init__(self, from_base_block, to_base_block, condition):
-        self.__from_base_block = from_base_block
-        self.__to_base_block = to_base_block
-        self.__condition = condition
-
-    def get_from_base_block_id(self):
-        return self.__from_base_block
-
-    def get_to_base_block_id(self):
-        return self.__to_base_block
-
-    def get_condition(self):
-        return self.__condition
+        self.from_base_block = from_base_block
+        self.to_base_block = to_base_block
+        self.condition = condition
 
 
 class CFG:
-    def __init__(self, number_base_blocks, number_edges, input_data):
-        self.__number_base_blocks = number_base_blocks
-        self.__number_edges = number_edges
-        self.__input_data = input_data
-        self.__dictionary_base_blocks = {}
-        self.__generate_cfg()
+    settings = dict()
 
-    def __generate_cfg(self):
-        base_blocks_settings = Constants.SETTINGS["base_blocks"]["number_operations"]
-        settings_comparison_operators = Constants.SETTINGS["comparison_operators"]
-        operation_settings = Constants.SETTINGS["operations"]
+    def __init__(self, number_base_blocks, number_edges, input_data, generation=True):
+        self.number_base_blocks = number_base_blocks
+        self.number_edges = number_edges
+        self.input_data = input_data
+        self.dictionary_base_blocks = {}
+        if generation: self._generate_cfg()
 
-        for i in range(self.__number_base_blocks):
+    def _generate_cfg(self):
+        base_blocks_settings = CFG.settings["base_blocks"]["number_operations"]
+        settings_comparison_operators = CFG.settings["comparison_operators"]
+        operation_settings = CFG.settings["operations"]
+
+        for i in range(self.number_base_blocks):
             number_operations = randint(base_blocks_settings["lower_bound"], base_blocks_settings["upper_bound"])
             operations = []
             for j in range(number_operations):
                 index_operation = randint(0, len(Operations) - 1)
                 value_operand = None if Operations(index_operation) == Operations.BIT_INVERSION else randint(operation_settings[Operations(index_operation).name.lower()]["lower_bound"], operation_settings[Operations(index_operation).name.lower()]["upper_bound"])
                 operations.append((Operations(index_operation), value_operand))
-            self.__dictionary_base_blocks[i] = BaseBlock(operations, None if i else self.__input_data)
+            self.dictionary_base_blocks[i] = BaseBlock(operations, None if i else self.input_data)
 
-        self.__base_blocks_related_with_initial_base_block = {0}
-        self.__base_blocks_unrelated_with_initial_base_block= set(range(1, self.__number_base_blocks))
+        self._base_blocks_related_with_initial_base_block = {0}
+        self._base_blocks_unrelated_with_initial_base_block= set(range(1, self.number_base_blocks))
 
-        for i in range(self.__number_edges):
-            if len(self.__base_blocks_unrelated_with_initial_base_block) == self.__number_edges - i:
-                to_base_block = choice(list(self.__base_blocks_unrelated_with_initial_base_block))
+        for i in range(self.number_edges):
+            if len(self._base_blocks_unrelated_with_initial_base_block) == self.number_edges - i:
+                to_base_block = choice(list(self._base_blocks_unrelated_with_initial_base_block))
                 while True:
-                    from_base_block = choice(list(self.__base_blocks_related_with_initial_base_block))
-                    if len(self.__dictionary_base_blocks[from_base_block].get_edges()) < 2: break
+                    from_base_block = choice(list(self._base_blocks_related_with_initial_base_block))
+                    if len(self.dictionary_base_blocks[from_base_block].edges) < 2: break
                 self.dfs(to_base_block)
             else:
                 while True:
-                    from_base_block = randint(0, self.__number_base_blocks - 1)
-                    to_base_block = randint(0, self.__number_base_blocks - 1)
-                    if len(self.__dictionary_base_blocks[from_base_block].get_edges()) < 2 and to_base_block: break
+                    from_base_block = randint(0, self.number_base_blocks - 1)
+                    to_base_block = randint(0, self.number_base_blocks - 1)
+                    if len(self.dictionary_base_blocks[from_base_block].edges) < 2 and to_base_block: break
 
-            if self.__dictionary_base_blocks[from_base_block].get_edges():
-                first_edge_condition = self.__dictionary_base_blocks[from_base_block].get_edges()[0].get_condition()
+            if self.dictionary_base_blocks[from_base_block].edges:
+                first_edge_condition = self.dictionary_base_blocks[from_base_block].edges[0].condition
                 match first_edge_condition[0]:
                     case ComparisonOperators.EQUALITY:
                         new_condition = (
@@ -170,16 +132,16 @@ class CFG:
                     module = None
                     value_for_comparison = randint(settings_comparison_operators[comparison_operator.name.lower()]["lower_bound"], settings_comparison_operators[comparison_operator.name.lower()]["upper_bound"])
                 new_condition = (comparison_operator, module, value_for_comparison)
-            self.__dictionary_base_blocks[from_base_block].add_edge(Edge(from_base_block, to_base_block, new_condition))
+            self.dictionary_base_blocks[from_base_block].add_edge(Edge(from_base_block, to_base_block, new_condition))
 
     def dfs(self, id_base_block, visited_base_blocks=None):
-        if visited_base_blocks is None: visited_base_blocks = [False] * self.__number_base_blocks
+        if visited_base_blocks is None: visited_base_blocks = [False] * self.number_base_blocks
         visited_base_blocks[id_base_block] = True
-        self.__base_blocks_related_with_initial_base_block.add(id_base_block)
-        self.__base_blocks_unrelated_with_initial_base_block.discard(id_base_block)
-        for edge in self.__dictionary_base_blocks[id_base_block].get_edges():
-            if not visited_base_blocks[edge.get_to_base_block_id()]:
-                self.dfs(edge.get_to_base_block_id(), visited_base_blocks)
+        self._base_blocks_related_with_initial_base_block.add(id_base_block)
+        self._base_blocks_unrelated_with_initial_base_block.discard(id_base_block)
+        for edge in self.dictionary_base_blocks[id_base_block].edges:
+            if not visited_base_blocks[edge.to_base_block]:
+                self.dfs(edge.to_base_block, visited_base_blocks)
 
     def get_dictionary_base_blocks(self):
-        return self.__dictionary_base_blocks
+        return self.dictionary_base_blocks
