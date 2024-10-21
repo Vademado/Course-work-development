@@ -143,6 +143,3 @@ class CFG:
         for edge in self.dictionary_base_blocks[id_base_block].edges:
             if not visited_base_blocks[edge.to_base_block]:
                 self.dfs(edge.to_base_block, visited_base_blocks)
-
-    def get_dictionary_base_blocks(self):
-        return self.dictionary_base_blocks
