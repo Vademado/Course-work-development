@@ -1,10 +1,10 @@
-import constants
-from CFG import *
-from CFGVisualizer import *
+from resources import constants
+from src.cfg.CFG import *
+from src.cfg.visualization.CFGVisualizer import *
 import json
 from random import randint
 
-from cfg_serialization import serialize_cfg, deserialize_cfg
+from src.cfg.cfg_serialization import serialize_cfg, deserialize_cfg
 
 
 class App:

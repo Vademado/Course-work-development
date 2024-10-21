@@ -1,5 +1,5 @@
 from construct import *
-from CFG import *
+from src.cfg.CFG import *
 
 operation_struct = Struct(
     "index_operation" / Int8ub,

@@ -45,7 +45,7 @@ def read_data():
 
 
 def read_settings():
-    with open('settings.json', 'r', encoding='utf-8') as f:
+    with open('config/settings.json', 'r', encoding='utf-8') as f:
         Constants.SETTINGS = json.load(f)
 
 

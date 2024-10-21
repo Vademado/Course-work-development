@@ -1,5 +1,5 @@
 import graphviz
-from utils import *
+from resources.utils import *
 
 
 class CFGVisualizer:

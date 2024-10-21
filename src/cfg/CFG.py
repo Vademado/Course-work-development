@@ -1,4 +1,4 @@
-from utils import ComparisonOperators, Operations
+from resources.utils import ComparisonOperators, Operations
 from random import randint, choice
 
 
