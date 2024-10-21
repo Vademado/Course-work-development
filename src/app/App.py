@@ -8,7 +8,7 @@ from src.cfg.cfg_serialization import serialize_cfg, deserialize_cfg
 
 
 class App:
-    def __init__(self, settings_path="settings.json"):
+    def __init__(self, settings_path="config/settings.json"):
         self.settings_path = settings_path
 
     def _read_data(self):
