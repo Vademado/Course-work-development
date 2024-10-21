@@ -1,39 +1,13 @@
 from construct import *
 from CFG import *
 
-operation_enum = Enum(Int8ub,
-                      ADDITION=Operations.ADDITION.value,
-                      SUBTRACTION=Operations.SUBTRACTION.value,
-                      MULTIPLICATION=Operations.MULTIPLICATION.value,
-                      DIVISION=Operations.DIVISION.value,
-                      EXPONENTIATION=Operations.EXPONENTIATION.value,
-                      DIVISION_BY_MODULUS=Operations.DIVISION_BY_MODULUS.value,
-                      BIT_SHIFT_TO_LEFT=Operations.BIT_SHIFT_TO_LEFT.value,
-                      BIT_SHIFT_TO_RIGHT=Operations.BIT_SHIFT_TO_RIGHT.value,
-                      BITWISE_OR=Operations.BITWISE_OR.value,
-                      BITWISE_EXCLUSIVE_OR=Operations.BITWISE_EXCLUSIVE_OR.value,
-                      BITWISE_AND=Operations.BITWISE_AND.value,
-                      BIT_INVERSION=Operations.BIT_INVERSION.value
-                      )
-
-comparison_enum = Enum(Int8ub,
-                       EQUALITY=ComparisonOperators.EQUALITY.value,
-                       INEQUALITY=ComparisonOperators.INEQUALITY.value,
-                       LESS_THAN=ComparisonOperators.LESS_THAN.value,
-                       GREATER_THAN=ComparisonOperators.GREATER_THAN.value,
-                       LESS_THAN_OR_EQUAL=ComparisonOperators.LESS_THAN_OR_EQUAL.value,
-                       GREATER_THAN_OR_EQUAL=ComparisonOperators.GREATER_THAN_OR_EQUAL.value,
-                       COMPARABLE_MODULO=ComparisonOperators.COMPARABLE_MODULO.value,
-                       INCOMPARABLY_MODULO=ComparisonOperators.INCOMPARABLY_MODULO.value
-                       )
-
 operation_struct = Struct(
-    "operation" / operation_enum,
+    "index_operation" / Int8ub,
     "operand" / Int64sb
 )
 
 condition_struct = Struct(
-    "condition_operator" / comparison_enum,
+    "index_condition" / Int8ub,
     "module" / Int64ub,
     "comparison_value" / Int64sb
 )
@@ -65,15 +39,14 @@ def serialize_cfg(cfg):
             {
                 "id": block.id,
                 "operations": [
-                    {"operation": operation[0].value, "operand": operation[1] if operation[1] is not None else 0} for
-                    operation in block.operations
+                    {"index_operation": op[0].value, "operand": op[1] if op[1] is not None else 0} for op in block.operations
                 ],
                 "edges": [
                     {
                         "from_base_block": edge.from_base_block,
                         "to_base_block": edge.to_base_block,
                         "condition": {
-                            "condition_operator": edge.condition[0].value,
+                            "index_condition": edge.condition[0].value,
                             "module": edge.condition[1] if edge.condition[1] is not None else 0,
                             "comparison_value": edge.condition[2]
                         }
@@ -92,13 +65,13 @@ def deserialize_cfg(serialized_data):
     parsed_data = cfg_struct.parse(serialized_data)
     cfg = CFG(parsed_data.number_base_blocks, parsed_data.number_edges, input_data=None, generation=False)
     for base_block_data in parsed_data.base_blocks:
-        base_block = BaseBlock([(Operations(op.operation), op.operand) for op in base_block_data.operations])
+        base_block = BaseBlock([(Operations(op.index_operation), op.operand) for op in base_block_data.operations])
         for edge_data in base_block_data.edges:
             condition = (
-                ComparisonOperators(edge_data.condition_operator),
-                edge_data.module if edge_data.module != 0 else None,
-                edge_data.comparison_value
+                ComparisonOperators(edge_data.condition.index_condition),
+                edge_data.condition.module if edge_data.condition.module != 0 else None,
+                edge_data.condition.comparison_value
             )
             base_block.add_edge(Edge(edge_data.from_base_block, edge_data.to_base_block, condition))
-        cfg.dictionary_base_blocks[base_block.id] = base_block
+        cfg.dictionary_base_blocks[base_block_data.id] = base_block
     return cfg

@@ -133,6 +133,7 @@ class CFG:
                     value_for_comparison = randint(settings_comparison_operators[comparison_operator.name.lower()]["lower_bound"], settings_comparison_operators[comparison_operator.name.lower()]["upper_bound"])
                 new_condition = (comparison_operator, module, value_for_comparison)
             self.dictionary_base_blocks[from_base_block].add_edge(Edge(from_base_block, to_base_block, new_condition))
+        BaseBlock.id = 0
 
     def dfs(self, id_base_block, visited_base_blocks=None):
         if visited_base_blocks is None: visited_base_blocks = [False] * self.number_base_blocks
