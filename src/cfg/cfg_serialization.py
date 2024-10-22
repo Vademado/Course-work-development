@@ -1,5 +1,6 @@
 from construct import *
-from src.cfg.CFG import *
+from src.cfg.CFG import CFG, BaseBlock, Edge
+from resources.utils import ComparisonOperators, Operations
 
 operation_struct = Struct(
     "index_operation" / Int8ub,
@@ -31,7 +32,7 @@ cfg_struct = Struct(
 )
 
 
-def serialize_cfg(cfg):
+def serialize_cfg(cfg:CFG):
     serialized_data = cfg_struct.build({
         "number_base_blocks": cfg.number_base_blocks,
         "number_edges": cfg.number_edges,

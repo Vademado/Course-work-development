@@ -1,15 +1,16 @@
-from resources import constants
-from src.cfg.CFG import *
-from src.cfg.visualization.CFGVisualizer import *
 import json
 from random import randint
-
+from resources import constants
+from src.cfg.CFG import CFG
+from src.cfg.visualization.CFGVisualizer import CFGVisualizer
 from src.cfg.cfg_serialization import serialize_cfg, deserialize_cfg
+from src.cfa.CFA import CFA
 
 
 class App:
-    def __init__(self, settings_path="config/settings.json"):
+    def __init__(self, settings_path:str="config/settings.json"):
         self.settings_path = settings_path
+        self.input_data = 0
 
     def _read_data(self):
         print("Введите количество вершин:", end=' ')
@@ -28,3 +29,5 @@ class App:
         #CFGVisualizer.visualize_cfg(cfg)
         # print(serialize_cfg(cfg))
         CFGVisualizer.visualize_cfg(deserialize_cfg(serialize_cfg(cfg)))
+        CFA.cfg_traversal(cfg, 10)
+
