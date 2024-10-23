@@ -25,9 +25,10 @@ class App:
     def run(self):
         self._read_data()
         self._read_settings()
-        cfg = CFG(constants.NUMBER_OF_BASE_BLOCKS, constants.NUMBER_OF_EDGES, constants.INPUT_DATA)
+        cfg = CFG(constants.NUMBER_OF_BASE_BLOCKS, constants.NUMBER_OF_EDGES)
         #CFGVisualizer.visualize_cfg(cfg)
         # print(serialize_cfg(cfg))
-        CFGVisualizer.visualize_cfg(deserialize_cfg(serialize_cfg(cfg)))
+        # CFGVisualizer.visualize_cfg(deserialize_cfg(serialize_cfg(cfg)))
         CFA.cfg_traversal(cfg, 10)
+        CFGVisualizer.visualize_cfg(cfg)
 

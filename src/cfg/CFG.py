@@ -28,10 +28,9 @@ class BaseBlock:
 class CFG:
     settings = dict()
 
-    def __init__(self, number_base_blocks:int, number_edges:int, input_data:int, generation:bool=True):
+    def __init__(self, number_base_blocks:int, number_edges:int, generation:bool=True):
         self.number_base_blocks = number_base_blocks
         self.number_edges = number_edges
-        self.input_data = input_data
         self.dictionary_base_blocks = {}
         if generation: self._generate_cfg()
 

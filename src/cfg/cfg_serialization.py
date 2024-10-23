@@ -32,7 +32,7 @@ cfg_struct = Struct(
 )
 
 
-def serialize_cfg(cfg:CFG):
+def serialize_cfg(cfg:CFG, file_name:str):
     serialized_data = cfg_struct.build({
         "number_base_blocks": cfg.number_base_blocks,
         "number_edges": cfg.number_edges,
@@ -56,7 +56,7 @@ def serialize_cfg(cfg:CFG):
             } for block in cfg.dictionary_base_blocks.values()
         ]
     })
-    with open("cfg.bin", 'wb') as f:
+    with open(f"{file_name}.bin", 'wb') as f:
         f.write(serialized_data)
         f.close()
     return serialized_data
@@ -64,7 +64,7 @@ def serialize_cfg(cfg:CFG):
 
 def deserialize_cfg(serialized_data):
     parsed_data = cfg_struct.parse(serialized_data)
-    cfg = CFG(parsed_data.number_base_blocks, parsed_data.number_edges, input_data=None, generation=False)
+    cfg = CFG(parsed_data.number_base_blocks, parsed_data.number_edges, generation=False)
     for base_block_data in parsed_data.base_blocks:
         base_block = BaseBlock([(Operations(op.index_operation), op.operand) for op in base_block_data.operations])
         for edge_data in base_block_data.edges:
