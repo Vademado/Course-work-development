@@ -16,5 +16,5 @@ args = parser.parse_args()
 print(f"n={args.number_base_blocks} r={args.read} save={args.save} inp={args.input_data} show={args.show}")
 
 if __name__ == '__main__':
-    app = App()
+    app = App(args.number_base_blocks, args.read, args.input_data, args.show)
     app.run()

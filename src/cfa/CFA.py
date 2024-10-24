@@ -1,10 +1,10 @@
 from resources.utils import ComparisonOperators, Operations
-from src.cfg.CFG import CFG, BaseBlock, Edge
+from src.cfg.CFG import CFG, BaseBlock
 
 
 class CFA:
     @staticmethod
-    def cfg_traversal(cfg:CFG, input_data:int,  file_path:str=None):
+    def cfg_traversal(cfg:CFG, input_data:int):
         print(f"Input data: {input_data}")
         to_base_block = 0
         path = []
