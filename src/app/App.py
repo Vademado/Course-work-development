@@ -8,7 +8,7 @@ from src.cfg.cfg_serialization import serialize_cfg, deserialize_cfg
 
 
 class App:
-    def __init__(self, number_of_base_blocks: int, file_path_to_read: str, name_of_file_to_save: str, input_data: int, show=False, settings_path: str = "config/settings.json"):
+    def __init__(self, number_of_base_blocks: int, file_path_to_read: str, name_of_file_to_save: str, input_data: int, settings_path: str, show: bool):
         constants.NUMBER_OF_BASE_BLOCKS = number_of_base_blocks
         self.file_path_to_read = file_path_to_read
         self.name_of_file_to_save = name_of_file_to_save
