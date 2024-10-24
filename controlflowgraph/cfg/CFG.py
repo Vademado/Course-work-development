@@ -1,5 +1,6 @@
 from random import randint, choice
-from resources.utils import ComparisonOperators, Operations
+
+from controlflowgraph.utils.enums import ComparisonOperators, Operations
 
 
 class Edge:
@@ -44,12 +45,14 @@ class CFG:
             operations = []
             for j in range(number_operations):
                 index_operation = randint(0, len(Operations) - 1)
-                value_operand = None if Operations(index_operation) == Operations.BIT_INVERSION else randint(operation_settings[Operations(index_operation).name.lower()]["lower_bound"], operation_settings[Operations(index_operation).name.lower()]["upper_bound"])
+                value_operand = None if Operations(index_operation) == Operations.BIT_INVERSION else randint(
+                    operation_settings[Operations(index_operation).name.lower()]["lower_bound"],
+                    operation_settings[Operations(index_operation).name.lower()]["upper_bound"])
                 operations.append((Operations(index_operation), value_operand))
             self.dictionary_base_blocks[i] = BaseBlock(operations)
 
         self._base_blocks_related_with_initial_base_block = {0}
-        self._base_blocks_unrelated_with_initial_base_block= set(range(1, self.number_base_blocks))
+        self._base_blocks_unrelated_with_initial_base_block = set(range(1, self.number_base_blocks))
 
         for i in range(self.number_edges):
             if len(self._base_blocks_unrelated_with_initial_base_block) == self.number_edges - i:
@@ -94,11 +97,14 @@ class CFG:
             else:
                 comparison_operator = ComparisonOperators(randint(0, len(ComparisonOperators) - 1))
                 if comparison_operator == ComparisonOperators.COMPARABLE_MODULO or comparison_operator == ComparisonOperators.INCOMPARABLY_MODULO:
-                    module = randint(settings_comparison_operators[comparison_operator.name.lower()]["lower_bound"], settings_comparison_operators[comparison_operator.name.lower()]["upper_bound"])
+                    module = randint(settings_comparison_operators[comparison_operator.name.lower()]["lower_bound"],
+                                     settings_comparison_operators[comparison_operator.name.lower()]["upper_bound"])
                     value_for_comparison = randint(0, module - 1)
                 else:
                     module = None
-                    value_for_comparison = randint(settings_comparison_operators[comparison_operator.name.lower()]["lower_bound"], settings_comparison_operators[comparison_operator.name.lower()]["upper_bound"])
+                    value_for_comparison = randint(
+                        settings_comparison_operators[comparison_operator.name.lower()]["lower_bound"],
+                        settings_comparison_operators[comparison_operator.name.lower()]["upper_bound"])
                 new_condition = (comparison_operator, module, value_for_comparison)
             self.dictionary_base_blocks[from_base_block].add_edge(Edge(from_base_block, to_base_block, new_condition))
         BaseBlock.id = 0

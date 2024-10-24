@@ -1,12 +1,12 @@
 import graphviz
-from src.cfg.CFG import CFG, BaseBlock, Edge
-from resources.utils import ComparisonOperators, Operations
 
+from controlflowgraph.cfg.CFG import CFG, BaseBlock, Edge
+from controlflowgraph.utils.enums import ComparisonOperators, Operations
 
 
 class CFGVisualizer:
     @staticmethod
-    def operations_in_base_block_convert_to_string(base_block:BaseBlock):
+    def operations_in_base_block_convert_to_string(base_block: BaseBlock):
         string_operations_in_base_block = ""
         if base_block.id == 0:
             string_operations_in_base_block += "INITIAL BLOCK\n\n"
@@ -41,7 +41,7 @@ class CFGVisualizer:
         return string_operations_in_base_block
 
     @staticmethod
-    def condition_in_edge_convert_to_string(edge:Edge):
+    def condition_in_edge_convert_to_string(edge: Edge):
         condition = edge.condition
         match condition[0]:
             case ComparisonOperators.EQUALITY:
@@ -63,7 +63,7 @@ class CFGVisualizer:
         return string_condition
 
     @staticmethod
-    def visualize_cfg(cfg:CFG):
+    def visualize_cfg(cfg: CFG):
         dot = graphviz.Digraph(comment='Control-flow graph')
 
         for id_base_block, base_block in cfg.dictionary_base_blocks.items():

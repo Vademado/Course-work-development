@@ -1,5 +1,6 @@
 import argparse
-from src.app.App import App
+
+from controlflowgraph.app.App import App
 
 parser = argparse.ArgumentParser()
 

@@ -1,10 +1,11 @@
 import json
 from random import randint
-from resources import constants
-from src.cfg.CFG import CFG
-from src.cfa.CFA import CFA
-from src.cfg.visualization.CFGVisualizer import CFGVisualizer
-from src.cfg.cfg_serialization import serialize_cfg, deserialize_cfg
+
+from controlflowgraph.cfa.CFA import CFA
+from controlflowgraph.cfg.CFG import CFG
+from controlflowgraph.cfg.cfg_serialization import serialize_cfg, deserialize_cfg
+from controlflowgraph.cfg.visualization.CFGVisualizer import CFGVisualizer
+from controlflowgraph.utils import constants
 
 
 class App:

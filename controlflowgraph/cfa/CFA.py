@@ -1,5 +1,5 @@
-from src.cfg.CFG import CFG, BaseBlock
-from resources.utils import ComparisonOperators, Operations
+from controlflowgraph.cfg.CFG import CFG, BaseBlock
+from controlflowgraph.utils.enums import ComparisonOperators, Operations
 
 
 class CFA:

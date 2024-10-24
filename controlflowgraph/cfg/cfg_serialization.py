@@ -1,6 +1,7 @@
 from construct import *
-from src.cfg.CFG import CFG, BaseBlock, Edge
-from resources.utils import ComparisonOperators, Operations
+
+from controlflowgraph.cfg.CFG import CFG, BaseBlock, Edge
+from controlflowgraph.utils.enums import ComparisonOperators, Operations
 
 operation_struct = Struct(
     "index_operation" / Int8ub,
