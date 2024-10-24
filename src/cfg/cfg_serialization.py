@@ -32,7 +32,7 @@ cfg_struct = Struct(
 )
 
 
-def serialize_cfg(cfg:CFG, file_name_to_save:str):
+def serialize_cfg(cfg: CFG):
     serialized_data = cfg_struct.build({
         "number_base_blocks": cfg.number_base_blocks,
         "number_edges": cfg.number_edges,
@@ -40,7 +40,8 @@ def serialize_cfg(cfg:CFG, file_name_to_save:str):
             {
                 "id": block.id,
                 "operations": [
-                    {"index_operation": op[0].value, "operand": op[1] if op[1] is not None else 0} for op in block.operations
+                    {"index_operation": op[0].value, "operand": op[1] if op[1] is not None else 0} for op in
+                    block.operations
                 ],
                 "edges": [
                     {
@@ -56,16 +57,10 @@ def serialize_cfg(cfg:CFG, file_name_to_save:str):
             } for block in cfg.dictionary_base_blocks.values()
         ]
     })
-    with open(f"{file_name_to_save}.bin", 'wb') as f:
-        f.write(serialized_data)
-        f.close()
     return serialized_data
 
 
-def deserialize_cfg(file_to_read:str):
-    with open(f"{file_to_read}.bin", "rb") as f:
-        serialized_data = f.read()
-        f.close()
+def deserialize_cfg(serialized_data):
     parsed_data = cfg_struct.parse(serialized_data)
     cfg = CFG(parsed_data.number_base_blocks, parsed_data.number_edges, generation=False)
     for base_block_data in parsed_data.base_blocks:

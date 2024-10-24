@@ -1,9 +1,9 @@
-from resources.utils import ComparisonOperators, Operations
 from random import randint, choice
+from resources.utils import ComparisonOperators, Operations
 
 
 class Edge:
-    def __init__(self, from_base_block:int, to_base_block:int, condition:tuple[ComparisonOperators,int, int]):
+    def __init__(self, from_base_block: int, to_base_block: int, condition: tuple[ComparisonOperators, int, int]):
         self.from_base_block = from_base_block
         self.to_base_block = to_base_block
         self.condition = condition
@@ -15,20 +15,20 @@ class Edge:
 class BaseBlock:
     id = 0
 
-    def __init__(self, operations:list[tuple[Operations, int]]):
+    def __init__(self, operations: list[tuple[Operations, int]]):
         self.id = BaseBlock.id
         BaseBlock.id += 1
         self.operations = operations
         self.edges = []
 
-    def add_edge(self, edge:Edge):
+    def add_edge(self, edge: Edge):
         self.edges.append(edge)
 
 
 class CFG:
     settings = dict()
 
-    def __init__(self, number_base_blocks:int, number_edges:int, generation:bool=True):
+    def __init__(self, number_base_blocks: int, number_edges: int, generation: bool = True):
         self.number_base_blocks = number_base_blocks
         self.number_edges = number_edges
         self.dictionary_base_blocks = {}
@@ -103,7 +103,7 @@ class CFG:
             self.dictionary_base_blocks[from_base_block].add_edge(Edge(from_base_block, to_base_block, new_condition))
         BaseBlock.id = 0
 
-    def dfs(self, id_base_block:int, visited_base_blocks:list[bool]=None):
+    def dfs(self, id_base_block: int, visited_base_blocks: list[bool] = None):
         if visited_base_blocks is None: visited_base_blocks = [False] * self.number_base_blocks
         visited_base_blocks[id_base_block] = True
         self._base_blocks_related_with_initial_base_block.add(id_base_block)

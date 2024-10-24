@@ -75,5 +75,4 @@ class CFGVisualizer:
                 condition_in_edge = CFGVisualizer.condition_in_edge_convert_to_string(edge)
                 dot.edge(str(edge.from_base_block), str(edge.to_base_block), condition_in_edge)
 
-        # dot.render('Control-flow graph', format='png')
         dot.render('Control-flow graph', view=True)
