@@ -45,7 +45,7 @@ class CFG:
             operations = []
             for j in range(number_operations):
                 index_operation = randint(0, len(Operations) - 1)
-                value_operand = None if Operations(index_operation) == Operations.BIT_INVERSION else randint(
+                value_operand = randint(
                     operation_settings[Operations(index_operation).name.lower()]["lower_bound"],
                     operation_settings[Operations(index_operation).name.lower()]["upper_bound"])
                 operations.append((Operations(index_operation), value_operand))
@@ -95,7 +95,7 @@ class CFG:
                         new_condition = (
                             ComparisonOperators.COMPARABLE_MODULO, first_edge_condition[1], first_edge_condition[2])
             else:
-                comparison_operator = ComparisonOperators(randint(0, len(ComparisonOperators) - 1))
+                comparison_operator = ComparisonOperators(randint(1, len(ComparisonOperators) - 1))
                 if comparison_operator == ComparisonOperators.COMPARABLE_MODULO or comparison_operator == ComparisonOperators.INCOMPARABLY_MODULO:
                     module = randint(settings_comparison_operators[comparison_operator.name.lower()]["lower_bound"],
                                      settings_comparison_operators[comparison_operator.name.lower()]["upper_bound"])
@@ -107,6 +107,9 @@ class CFG:
                         settings_comparison_operators[comparison_operator.name.lower()]["upper_bound"])
                 new_condition = (comparison_operator, module, value_for_comparison)
             self.dictionary_base_blocks[from_base_block].add_edge(Edge(from_base_block, to_base_block, new_condition))
+        for base_block in self.dictionary_base_blocks.values():
+            if len(base_block.edges) == 1:
+                base_block.edges[0].condition = (ComparisonOperators.NO_CONDITION, None, None)
         BaseBlock.id = 0
 
     def dfs(self, id_base_block: int, visited_base_blocks: list[bool] = None):

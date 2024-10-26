@@ -36,5 +36,5 @@ class App:
             with open(f"{self.file_path_to_save}.bin", 'wb') as f:
                 f.write(serialize_cfg(cfg))
                 f.close()
-        if constants.INPUT_DATA: CFA.cfg_traversal(cfg, constants.INPUT_DATA)
+        if constants.INPUT_DATA is not None: CFA.cfg_traversal(cfg, constants.INPUT_DATA)
         if self.show: CFGVisualizer.visualize_cfg(cfg)

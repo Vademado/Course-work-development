@@ -51,7 +51,7 @@ def serialize_cfg(cfg: CFG):
                         "condition": {
                             "index_condition": edge.condition[0].value,
                             "module": edge.condition[1] if edge.condition[1] is not None else 0,
-                            "comparison_value": edge.condition[2]
+                            "comparison_value": edge.condition[2] if edge.condition[2] is not None else 0
                         }
                     } for edge in block.edges
                 ]

@@ -12,54 +12,54 @@ class CFGVisualizer:
             string_operations_in_base_block += "INITIAL BLOCK\n\n"
         else:
             string_operations_in_base_block += f"{base_block.id}\n\n"
-        for operation in base_block.operations:
-            match operation[0]:
+        for operation, value_operand in base_block.operations:
+            match operation:
                 case Operations.ADDITION:
-                    string_operations_in_base_block += f"X += {operation[1]}\n"
+                    string_operations_in_base_block += f"X + {value_operand}\n"
                 case Operations.SUBTRACTION:
-                    string_operations_in_base_block += f"X -= {operation[1]}\n"
+                    string_operations_in_base_block += f"X - {value_operand}\n"
                 case Operations.MULTIPLICATION:
-                    string_operations_in_base_block += f"X *= {operation[1]}\n"
+                    string_operations_in_base_block += f"X * {value_operand}\n"
                 case Operations.DIVISION:
-                    string_operations_in_base_block += f"X //= {operation[1]}\n"
+                    string_operations_in_base_block += f"X // {value_operand}\n"
                 case Operations.EXPONENTIATION:
-                    string_operations_in_base_block += f"X **= {operation[1]}\n"
+                    string_operations_in_base_block += f"X ** {value_operand}\n"
                 case Operations.DIVISION_BY_MODULUS:
-                    string_operations_in_base_block += f"X %= {operation[1]}\n"
+                    string_operations_in_base_block += f"X % {value_operand}\n"
                 case Operations.BIT_SHIFT_TO_LEFT:
-                    string_operations_in_base_block += f"X << {operation[1]}\n"
+                    string_operations_in_base_block += f"X << {value_operand}\n"
                 case Operations.BIT_SHIFT_TO_RIGHT:
-                    string_operations_in_base_block += f"X >> {operation[1]}\n"
+                    string_operations_in_base_block += f"X >> {value_operand}\n"
                 case Operations.BITWISE_OR:
-                    string_operations_in_base_block += f"X | {operation[1]}\n"
+                    string_operations_in_base_block += f"X | {value_operand}\n"
                 case Operations.BITWISE_EXCLUSIVE_OR:
-                    string_operations_in_base_block += f"X ^ {operation[1]}\n"
+                    string_operations_in_base_block += f"X ^ {value_operand}\n"
                 case Operations.BITWISE_AND:
-                    string_operations_in_base_block += f"X & {operation[1]}\n"
-                case Operations.BIT_INVERSION:
-                    string_operations_in_base_block += "~X\n"
+                    string_operations_in_base_block += f"X & {value_operand}\n"
         return string_operations_in_base_block
 
     @staticmethod
     def condition_in_edge_convert_to_string(edge: Edge):
-        condition = edge.condition
-        match condition[0]:
+        comparison_operator, module, value_for_comparison = edge.condition
+        match comparison_operator:
+            case ComparisonOperators.NO_CONDITION:
+                string_condition = ""
             case ComparisonOperators.EQUALITY:
-                string_condition = f"X == {condition[2]}"
+                string_condition = f"X == {value_for_comparison}"
             case ComparisonOperators.INEQUALITY:
-                string_condition = f"X != {condition[2]}"
+                string_condition = f"X != {value_for_comparison}"
             case ComparisonOperators.LESS_THAN:
-                string_condition = f"X < {condition[2]}"
+                string_condition = f"X < {value_for_comparison}"
             case ComparisonOperators.GREATER_THAN:
-                string_condition = f"X > {condition[2]}"
+                string_condition = f"X > {value_for_comparison}"
             case ComparisonOperators.LESS_THAN_OR_EQUAL:
-                string_condition = f"X <= {condition[2]}"
+                string_condition = f"X <= {value_for_comparison}"
             case ComparisonOperators.GREATER_THAN_OR_EQUAL:
-                string_condition = f"X >= {condition[2]}"
+                string_condition = f"X >= {value_for_comparison}"
             case ComparisonOperators.COMPARABLE_MODULO:
-                string_condition = f"X % {condition[1]} == {condition[2]}"
+                string_condition = f"X % {module} == {value_for_comparison}"
             case ComparisonOperators.INCOMPARABLY_MODULO:
-                string_condition = f"X % {condition[1]} != {condition[2]}"
+                string_condition = f"X % {module} != {value_for_comparison}"
         return string_condition
 
     @staticmethod

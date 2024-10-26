@@ -7,12 +7,18 @@ class CFA:
     def cfg_traversal(cfg: CFG, input_data: int):
         print(f"Input data: {input_data}")
         to_base_block = 0
+        hang_indicator = cfg.number_base_blocks ** 2
         path = []
         while to_base_block != -1:
-            print(f"Moving base block {to_base_block}, input {input_data}")
+            print(f"Moving base block {to_base_block}, input: {input_data}", end=", ")
             path.append(to_base_block)
             input_data = CFA._block_execution(cfg.dictionary_base_blocks[to_base_block], input_data)
+            print(f"output: {input_data}")
             to_base_block = CFA._go_to_next_base_block(cfg.dictionary_base_blocks[to_base_block], input_data)
+            hang_indicator -= 1
+            if not hang_indicator:
+                print("hang detected")
+                break
         print(path)
 
     @staticmethod
@@ -47,8 +53,6 @@ class CFA:
                     input_data ^= value_operand
                 case Operations.BITWISE_AND:
                     input_data &= value_operand
-                case Operations.BIT_INVERSION:
-                    input_data = ~input_data
         return input_data
 
     @staticmethod
@@ -56,6 +60,8 @@ class CFA:
         for from_base_block, to_base_block, condition in base_block.edges:
             comparison_operator, module, value_for_comparison = condition
             match comparison_operator:
+                case ComparisonOperators.NO_CONDITION:
+                    return to_base_block
                 case ComparisonOperators.EQUALITY:
                     if input_data == value_for_comparison: return to_base_block
                 case ComparisonOperators.INEQUALITY:
