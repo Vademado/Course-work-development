@@ -6,7 +6,7 @@ from controlflowgraph.utils.enums import ComparisonOperators, Operations
 
 class CFGVisualizer:
     @staticmethod
-    def operations_in_base_block_convert_to_string(base_block: BaseBlock):
+    def operations_in_base_block_convert_to_string(base_block: BaseBlock) -> str:
         string_operations_in_base_block = ""
         if base_block.id == 0:
             string_operations_in_base_block += "INITIAL BLOCK\n\n"
@@ -39,7 +39,7 @@ class CFGVisualizer:
         return string_operations_in_base_block
 
     @staticmethod
-    def condition_in_edge_convert_to_string(edge: Edge):
+    def condition_in_edge_convert_to_string(edge: Edge) -> str:
         comparison_operator, module, value_for_comparison = edge.condition
         match comparison_operator:
             case ComparisonOperators.NO_CONDITION:
