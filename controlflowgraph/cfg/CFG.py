@@ -1,4 +1,5 @@
 from random import randint, choice
+from sys import setrecursionlimit
 
 from controlflowgraph.utils.enums import ComparisonOperators, Operations
 
@@ -111,6 +112,8 @@ class CFG:
             if len(base_block.edges) == 1:
                 base_block.edges[0].condition = (ComparisonOperators.NO_CONDITION, None, None)
         BaseBlock.id = 0
+
+    setrecursionlimit(10000000)
 
     def dfs(self, id_base_block: int, visited_base_blocks: list[bool] = None):
         if visited_base_blocks is None: visited_base_blocks = [False] * self.number_base_blocks

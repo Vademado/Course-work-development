@@ -4,7 +4,7 @@
 
    Written by Marc Heuse <mh@mh-sec.de>
 
-   Copyright 2019-2023 AFLplusplus Project. All rights reserved.
+   Copyright 2019-2024 AFLplusplus Project. All rights reserved.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -207,54 +207,18 @@ static void __afl_end_testcase(void) {
 
 }
 
-/* you just need to modify the while() loop in this main() */
-
-static u32 iters_witout_covers;
-
 void send_fuzz_data(u8* buf, s32 len)
 {
   FILE* pf;
   pf = fopen("./tmp/fuzz_data.bin", "wb");
   fwrite(buf, 1, len, pf);
   fclose(pf);
-  uint16_t number = (uint16_t)buf[0] | ((uint16_t)buf[1] << 8);
-
-/*
-  uint32_t value = 0;
-  for (int i = 0; i < len && i < 4; i++) {
-    value |= (buf[i] << ((3 - i) * 8));
-  }
-  */
-
-  /*
-  char command[100];
-  sprintf(command, "python3 main.py -r=cfg -inp=%u > tmp.txt", number);
+  uint64_t number = 0;
+  for (u8 i=0; i < len; ++i) number += (uint64_t)buf[i] << 8 * i;
+  char command[200];
+  sprintf(command, "python3 ../../../Course-work-development/main.py -r=../../../Course-work-development/cfg -inp=%u -out=tmp", number);
   system(command);
-  */
-
-  char command[100];
-  sprintf(command, "python3 main.py -r=cfg -inp=%u", number);
-  system(command);
-
-  /*FILE* pf;
-  pf = fopen("./tmp/fuzz_data.bin", "wb");
-  fwrite(buf, 1, len, pf);
-  fclose(pf);
-  system("python3  main.py -r=cfg -inp={buf} >> tmp.txt");*/
-  // buf -> chislo -> graph
 }
-
-/*void have_hang_or_crush(u8* buf, u32 len)
-{
-  static u32 n_crush=0;
-  FILE *pf_crush;
-  u8 buff_name[100];
-  sprintf(buff_name, "./tmp/Crushes/crush_%d.bin", n_crush);
-  n_crush++;
-  pf_crush = fopen(buff_name, "wb");
-  fwrite(buf, 1, len, pf_crush);
-  fclose(pf_crush);
-}*/
 
 void get_cover(u8* buf, u32 len)
 {
@@ -262,7 +226,7 @@ void get_cover(u8* buf, u32 len)
     system("sudo python3 get_cover.py NO");
     usleep(1000);*/
     FILE* pf, *pf_log;
-    pf = fopen("./tmp.txt", "rb");
+    pf = fopen("./tmp.bin", "rb");
     u8 cur_addr_h, cur_addr_l;
     u16 cur_addr;
     u8 prev_addr = 0;
@@ -282,24 +246,17 @@ void get_cover(u8* buf, u32 len)
     fclose(pf);
 }
 
-
-void check_iters_witout_covers()
-{
-    if (iters_witout_covers > 30000)
-    {
-        system("sudo killall -9 ../../afl-fuzz");
-    }
-}
+/* you just need to modify the while() loop in this main() */
 
 int main(int argc, char *argv[]) {
 
   /* This is were the testcase data is written into */
-  u8  buf[0x1000];  // this is the maximum size for a test case! set it!
+  u8  buf[1024];  // this is the maximum size for a test case! set it!
   s32 len;
 
   /* here you specify the map size you need that you are reporting to
      afl-fuzz.  Any value is fine as long as it can be divided by 32. */
-  __afl_map_size = 65536;  // default is 65536 Число путей в программе, для флэе, вряд ли сильно больше, предположил, что 2048 (думаю с запасом)
+  __afl_map_size = MAP_SIZE;  // default is 65536
 
   /* then we initialize the shared memory map and start the forkserver */
   __afl_map_shm();
@@ -311,15 +268,19 @@ int main(int argc, char *argv[]) {
 
       /* here you have to create the magic that feeds the buf/len to the
          target and write the coverage to __afl_area_ptr */
+
       send_fuzz_data(buf, len); // Преобразовать buf в число и передать сгенерированной программе на вход
       get_cover(buf, len);
-      //check_iters_witout_covers();
-      // remove this, this is just to make afl-fuzz not complain when run
 
-      /*if (buf[0] == 0xff)
+      // ... the magic ...
+
+      /*
+      // remove this, this is just to make afl-fuzz not complain when run
+      if (buf[0] == 0xff)
         __afl_area_ptr[1] = 1;
       else
-        __afl_area_ptr[2] = 2;*/
+        __afl_area_ptr[2] = 2;
+      */
 
     }
 

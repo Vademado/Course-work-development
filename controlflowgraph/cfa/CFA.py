@@ -4,43 +4,27 @@ from controlflowgraph.utils.enums import ComparisonOperators, Operations
 
 class CFA:
     @staticmethod
-    def cfg_traversal(cfg: CFG, input_data: int):
-        # print(f"Input data: {input_data}")
+    def cfg_traversal(cfg: CFG, input_data: int, file_path_to_save_coverage: str):
+        print(f"Input data: {input_data}")
         to_base_block = 0
         hang_indicator = cfg.number_base_blocks ** 2
         path = []
         while to_base_block != -1:
-            # print(f"Moving base block {to_base_block}, input: {input_data}", end=", ")
+            print(f"Moving base block {to_base_block}, input: {input_data}", end=", ")
             path.append(to_base_block)
             input_data = CFA._block_execution(cfg.dictionary_base_blocks[to_base_block], input_data)
-            # print(f"output: {input_data}")
+            print(f"output: {input_data}")
             to_base_block = CFA._go_to_next_base_block(cfg.dictionary_base_blocks[to_base_block], input_data)
             hang_indicator -= 1
             if not hang_indicator:
-                #print("hang detected")
+                print("hang detected")
                 break
 
-        # for base_block in path:
-        #     byte_data = base_block.to_bytes(2, byteorder='big')
-        #     byte_string = ''.join(f"\\x{byte:02x}" for byte in byte_data)
-        #     print(byte_string, end='')
+        if file_path_to_save_coverage:
+            with open(f"{file_path_to_save_coverage}.bin", "wb") as f:
+                f.write(b''.join([base_block.to_bytes(2, byteorder='big') for base_block in path]))
 
-        # byte_string = ''.join(f"\\x{base_block:02x}" for base_block in path)
-        # print(byte_string)
-
-
-        # byte_string = ''.join(f"\\x{base_block:02x}" for base_block in path)
-        # with open("tmp.txt", "wt") as f:
-        #     f.write(byte_string)
-
-        print(b''.join([base_block.to_bytes(2, byteorder='big') for base_block in path]))
-
-
-        # with open("tmp.txt", "wb") as f:
-        #     print(b''.join([base_block.to_bytes(2, byteorder='big') for base_block in path]))
-        #     f.write(b''.join([base_block.to_bytes(2, byteorder='big') for base_block in path]))
-
-        #print(path)
+        print(path)
 
     @staticmethod
     def _block_execution(base_block: BaseBlock, input_data: int) -> int:
