@@ -213,10 +213,10 @@ void send_fuzz_data(u8* buf, s32 len)
   pf = fopen("./tmp/fuzz_data.bin", "wb");
   fwrite(buf, 1, len, pf);
   fclose(pf);
-  uint64_t number = 0;
-  for (u8 i=0; i < len; ++i) number += (uint64_t)buf[i] << 8 * i;
+  int64_t number = 0;
+  for (u8 i=0; i < len; ++i) number += (int64_t)buf[i] << 8 * i;
   char command[200];
-  sprintf(command, "python3 ../../../Course-work-development/main.py -r=../../../Course-work-development/cfg -inp=%u -out=tmp", number);
+  sprintf(command, "python3 ../../../Course-work-development/main.py -r=../../../Course-work-development/cfg -inp=%lld -out=tmp", number);
   system(command);
 }
 
